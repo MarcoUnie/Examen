@@ -35,7 +35,7 @@ def main():
                 print("Por favor, ingrese un número válido.")
         
         elif opcion == "3":
-            juego = ProblemaCaballo(tamano)
+            juego = ProblemaCaballo()
             pasos = juego.resolver()
             print("\nPasos para el Problema del Caballo:")
             for i, paso in enumerate(pasos, 1):
