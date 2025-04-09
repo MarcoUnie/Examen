@@ -29,8 +29,9 @@ class NodoCaballo(Nodos):
         return [(x, y) for x, y in movimientos if 0 <= x < tamano_tablero and 0 <= y < tamano_tablero]
 
 class ProblemaCaballo:
-    def __init__(self):
-        self.tablero = [[0] * 8 for _ in range(8)]
+    def __init__(self, tamano):
+        self.tamano = tamano
+        self.tablero = [[0] * tamano for _ in range(tamano)]
         self.pasos = []
         self.engine = create_engine('sqlite:///:memory:', echo=False)
         Base.metadata.create_all(self.engine)
@@ -38,7 +39,7 @@ class ProblemaCaballo:
         self.session = self.Session()
     
     def resolver(self):
-        x, y = random.randint(0, 8-1), random.randint(0, 8-1)
+        x, y = random.randint(0, self.tamano-1), random.randint(0, self.tamano-1)
         caballo = NodoCaballo((x, y))
         self.tablero[x][y] = 1
         paso = f"Caballo inicia en ({x}, {y})"
@@ -56,8 +57,8 @@ class ProblemaCaballo:
         visitados = {(x, y)}
         contador = 2
         
-        while len(visitados) < 8 * 8:
-            movimientos = caballo.movimientos_posibles(8)
+        while len(visitados) < self.tamano * self.tamano:
+            movimientos = caballo.movimientos_posibles(self.tamano)
             movimientos_no_visitados = [m for m in movimientos if m not in visitados]
             
             if not movimientos_no_visitados:
@@ -75,7 +76,7 @@ class ProblemaCaballo:
                 break
                 
             siguiente = min(movimientos_no_visitados, 
-                          key=lambda pos: len([m for m in NodoCaballo(pos).movimientos_posibles(8) 
+                          key=lambda pos: len([m for m in NodoCaballo(pos).movimientos_posibles(self.tamano) 
                                             if m not in visitados]))
             
             caballo.posicion = siguiente
@@ -97,4 +98,7 @@ class ProblemaCaballo:
         return self.pasos
     
     def get_posiciones(self):
-        return self.session.query(Posicion).filter_by(juego="Caballo").all()
+        posiciones = self.session.query(Posicion).filter_by(juego="Caballo").all()
+        if not posiciones:
+            print("No se encontraron posiciones en la base de datos.")  # Depuración
+        return posiciones
