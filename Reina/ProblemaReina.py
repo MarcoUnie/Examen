@@ -2,7 +2,7 @@
 import random
 from nodo.Nodo import Nodos
 
-class NodoReina(object):
+class NodoReina(Nodos):
     def __init__(self, posicion):
         super().__init__(posicion)
     
@@ -39,9 +39,3 @@ class ProblemaReinas:
                 if reina1.amenaza(reina2.posicion):
                     conflictos.append((reina1.posicion, reina2.posicion))
         return conflictos
-
-if __name__ == "__main__":
-    juego = ProblemaReinas(8)
-    pasos = juego.resolver()
-    for i, paso in enumerate(pasos):
-        print(f"Paso {i+1}: {paso}")

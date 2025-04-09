@@ -2,7 +2,7 @@
 # torre_hanoi/hanoi.py
 from nodo.Nodo import Nodos
 
-class NodoHanoi(object):
+class NodoHanoi(Nodos):
     def __init__(self, posicion, disco):
         super().__init__(posicion)
         self.disco = disco  # Tamaño del disco
@@ -25,9 +25,3 @@ class TorreHanoi:
             paso = f"Mover disco {nodo.disco} de torre {origen} a torre {destino}"
             self.pasos.append(paso)
             self._mover_discos(n-1, auxiliar, destino, origen)
-
-if __name__ == "__main__":
-    juego = TorreHanoi(3)
-    pasos = juego.resolver()
-    for i, paso in enumerate(pasos, 1):
-        print(f"Paso {i}: {paso}")
